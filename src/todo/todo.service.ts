@@ -14,14 +14,14 @@ export class TodoService {
     @InjectModel(USER_SETTING_COLLECTION_NAME) private readonly userSettingModel: Model<any>,
     @InjectModel(TODO_COLLECTION_NAME) private readonly todoModel: Model<any>,
   ) {}
-  async create(body: any) {
+  async create(userId: string, body: any) {
     try {
       const newTodo = new this.todoModel({
         ...body,
         data: moment(body.date).utc().add(7, 'hours'),
         formatDate: moment(body.date).utc().add(7, 'hours').format('YYYY-MM-DD'),
-        userId: '6905cb071e47e5dec5856aff',
-        user: '6905cb071e47e5dec5856aff',
+        userId: userId,
+        user: userId,
       });
       await newTodo.save();
       return { success: true };

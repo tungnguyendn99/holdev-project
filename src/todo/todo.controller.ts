@@ -9,9 +9,8 @@ export class TodoController {
   @Post()
   @UseGuards(AuthGuard('user-jwt'))
   create(@Req() req, @Body() body: any) {
-    // console.log('req', req);
-    console.log('req', req.user);
-    return this.todoService.create(body);
+    const userId = req.user.userId;
+    return this.todoService.create(userId, body);
   }
 
   @Get()
