@@ -1,0 +1,59 @@
+version: '3.3'
+
+services:
+  da-lieu:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: ${REPO_NAME}
+    image: ${REPO_NAME}
+    environment:
+      NODE_ENV: production
+      MONGO_HOST: holdev-db
+      MONGO_PORT: 27017
+      MONGO_DATABASE: holdev-db
+      MONGO_USERNAME:
+      MONGO_PASSWORD:
+      MONGO_AUTH_SOURCE:
+      MONGO_SINGLE_OR_CLUSTER: SINGLE
+      SERVER_PORT: 80
+    ports:
+      - '80:80'
+    volumes:
+      - /opt/pkh-static/files:/app/client/files
+      - /opt/pkh-static/features:/app/client/features
+    restart: always
+    depends_on:
+      - holdev-db
+    networks:
+      - app-network
+
+  cheat:
+    build:
+      context: ./
+      dockerfile: Dockerfile.cheat
+    image: holdev-node-modules
+    environment:
+      NODE_ENV: production
+
+  holdev-db:
+    image: mongo:latest
+    container_name: holdev-db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: holdev
+      MONGO_INITDB_ROOT_PASSWORD: holmes123
+      MONGO_INITDB_DATABASE: holdev-db
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+volumes:
+  mongo-data:
+
+networks:
+  app-network:
+    driver: bridge
