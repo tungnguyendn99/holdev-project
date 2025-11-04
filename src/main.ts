@@ -5,7 +5,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: [
-      'https://holdev-project.onrender.com',
+      'https://holdev-ui.onrender.com',
       'http://localhost:3000',
       'http://192.168.1.4:3000', // IP LAN của bạn (để mobile truy cập)
       'http://192.168.0.130:3000', // IP LAN của bạn (để mobile truy cập)
