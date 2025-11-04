@@ -1,14 +1,23 @@
-FROM node:20 AS dependencies
+# Dùng NodeJS nhẹ
+FROM node:18-alpine
 
-RUN mkdir /app
+# Tạo thư mục làm việc
 WORKDIR /app
 
-COPY package.json ./
-RUN yarn install
+# Copy file khai báo dependencies trước
+COPY package*.json yarn.lock ./
 
+# Cài dependency
+RUN yarn install --frozen-lockfile
+
+# Copy toàn bộ source code vào container
 COPY . .
 
-RUN yarn run build:prod
+# Build NestJS (chuyển TypeScript -> JavaScript)
+RUN yarn build:prod
 
-EXPOSE 80
-CMD [ "npm", "run", "start:prod" ][root@localhost holdev-project]# 
+# Mở cổng 3000 (hoặc port bạn config)
+EXPOSE 3009
+
+# Lệnh chạy app
+CMD ["node", "dist/main.js"]
