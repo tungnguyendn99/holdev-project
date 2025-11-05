@@ -1,26 +1,39 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { TradingService } from './trading.service';
 import { CreateTradingDto } from './dto/create-trading.dto';
 import { UpdateTradingDto } from './dto/update-trading.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('trading')
 export class TradingController {
   constructor(private readonly tradingService: TradingService) {}
 
   @Post('add-trade')
-  create(@Body() body: any) {
-    return this.tradingService.addTrade(body);
+  @UseGuards(AuthGuard('user-jwt'))
+  create(@Req() req, @Body() body: any) {
+    const userId = req.user.userId;
+    return this.tradingService.addTrade(userId, body);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.tradingService.findAll();
-  // }
+  @Post('update')
+  @UseGuards(AuthGuard('user-jwt'))
+  updateTrade(@Req() req, @Body() body: any) {
+    const userId = req.user.userId;
+    return this.tradingService.updateTrade(userId, body);
+  }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.tradingService.findOne(+id);
-  // }
+  @Post('list')
+  @UseGuards(AuthGuard('user-jwt'))
+  listTrade(@Req() req, @Body() body: any) {
+    const userId = req.user.userId;
+    return this.tradingService.listTrade(userId, body);
+  }
+
+  @Get(':id')
+  @UseGuards(AuthGuard('user-jwt'))
+  getTradeDetail(@Param('id') id: string) {
+    return this.tradingService.getTradeDetail(id);
+  }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateTradingDto: UpdateTradingDto) {

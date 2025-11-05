@@ -23,13 +23,13 @@ export const TradesSchema = new Schema(
 
     takeProfit: { type: Number }, // Mục tiêu chốt lời
     stopLoss: { type: Number }, // Mức cắt lỗ
-    closedBy: { type: String }, // Lý do đóng lệnh ['SL', 'TP', 'MA', 'SO']
+    closedBy: { type: String }, // Lý do đóng lệnh ['SL', 'TP', 'BE', 'MA', 'SO']
 
     result: { type: Number }, // Kết quả (lãi/lỗ)
     rating: { type: Number, min: 0, max: 5 }, // Đánh giá cá nhân (0–5)
     yourThought: { type: String }, // Ghi chú hoặc cảm nghĩ sau trade
 
-    reward: { type: String },
+    reward: { type: Number },
   },
   {
     collection: TRADES_COLLECTION_NAME,

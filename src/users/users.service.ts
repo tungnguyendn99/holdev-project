@@ -58,12 +58,12 @@ export class UsersService {
     }
   }
 
-  async createUserSetting(body: any): Promise<any> {
+  async createUserSetting(userId: string, body: any): Promise<any> {
     try {
       const newUserSetting = new this.userSettingModel({
         ...body,
-        userId: '6904d2843af7169e1b02285b',
-        user: '6904d2843af7169e1b02285b',
+        userId: userId,
+        user: userId,
       });
       await newUserSetting.save();
       return { success: true };
