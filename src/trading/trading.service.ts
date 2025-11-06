@@ -21,6 +21,7 @@ export class TradingService {
         ...body,
         userId: userId,
         user: userId,
+        reward: body.result / 4,
       });
       await newTrade.save();
       return { success: true };
@@ -34,6 +35,7 @@ export class TradingService {
     try {
       let query: any = {
         userId,
+        isDeleted: { $ne: true },
       };
       if (body.dateString) {
         const startOfMonth = moment(body.dateString, 'YYYY-MM').startOf('month').toDate();
@@ -79,9 +81,12 @@ export class TradingService {
     }
   }
 
-  async deleteTodo(userId: string, id: string) {
+  async deleteTrade(userId: string, id: string) {
     try {
-      await this.tradeModel.findByIdAndDelete(id).exec();
+      const trade = await this.tradeModel.findById(id);
+      trade.set({ isDeleted: true });
+      await trade.save();
+
       return { success: true };
     } catch (error) {
       console.log('error', error);

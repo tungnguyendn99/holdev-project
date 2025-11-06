@@ -16,6 +16,7 @@ export const TodoSchema = new Schema(
     priority: { type: String, enum: ['LOW', 'MEDIUM', 'HIGH'] },
     userId: { type: String },
     user: { type: Schema.Types.ObjectId, ref: USER_COLLECTION_NAME },
+    isDeleted: { type: Boolean, default: false },
   },
   {
     collection: TODO_COLLECTION_NAME,

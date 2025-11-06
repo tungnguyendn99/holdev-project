@@ -49,7 +49,7 @@ export function groupTrades(trades: any[], mode: GroupMode = 'day'): Record<stri
 
   for (const [key, group] of Object.entries(grouped)) {
     const profitSum = group.reduce((sum, t) => sum + (t.result || 0), 0);
-    const rewardSum = group.reduce((sum, t) => sum + (t.reward || 0), 0);
+    const rewardSum = group.reduce((sum, t) => sum + (t.reward || 0), 0).toFixed(2);
     const winCount = group.filter((t) => t.result > 0).length;
 
     const total = group.length;

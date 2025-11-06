@@ -30,6 +30,8 @@ export const TradesSchema = new Schema(
     yourThought: { type: String }, // Ghi chú hoặc cảm nghĩ sau trade
 
     reward: { type: Number },
+
+    isDeleted: { type: Boolean, default: false },
   },
   {
     collection: TRADES_COLLECTION_NAME,

@@ -35,6 +35,13 @@ export class TradingController {
     return this.tradingService.getTradeDetail(id);
   }
 
+  @Delete(':id')
+  @UseGuards(AuthGuard('user-jwt'))
+  deleteTrade(@Req() req, @Param('id') id: string) {
+    const userId = req.user.userId;
+    return this.tradingService.deleteTrade(userId, id);
+  }
+
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateTradingDto: UpdateTradingDto) {
   //   return this.tradingService.update(+id, updateTradingDto);

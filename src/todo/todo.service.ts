@@ -33,7 +33,7 @@ export class TodoService {
 
   async getTodo(userId: string) {
     try {
-      const listTodo = await this.todoModel.find({ userId }).exec();
+      const listTodo = await this.todoModel.find({ userId, isDeleted: { $ne: true } }).exec();
       return listTodo;
     } catch (error) {
       console.log('error', error);
@@ -43,7 +43,11 @@ export class TodoService {
 
   async deleteTodo(userId: string, id: string) {
     try {
-      await this.todoModel.findByIdAndDelete(id).exec();
+      const todo = await this.todoModel.findById(id);
+      todo.set({ isDeleted: true });
+      const data = await todo.save();
+      console.log('data', data);
+
       return { success: true };
     } catch (error) {
       console.log('error', error);
