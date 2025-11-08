@@ -12,6 +12,7 @@ import { TradingModule } from './trading/trading.module';
 import { UsersModule } from './users/users.module';
 import { TodoModule } from './todo/todo.module';
 import { NotificationModule } from './notification/notification.module';
+import { PokerModule } from './poker/poker.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { NotificationModule } from './notification/notification.module';
     UsersModule,
     TodoModule,
     NotificationModule,
+    PokerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

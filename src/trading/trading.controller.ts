@@ -29,6 +29,13 @@ export class TradingController {
     return this.tradingService.listTrade(userId, body);
   }
 
+  @Post('group')
+  @UseGuards(AuthGuard('user-jwt'))
+  listGroupTrade(@Req() req, @Body() body: any) {
+    const userId = req.user.userId;
+    return this.tradingService.listGroupTrade(userId, body);
+  }
+
   @Get(':id')
   @UseGuards(AuthGuard('user-jwt'))
   getTradeDetail(@Param('id') id: string) {

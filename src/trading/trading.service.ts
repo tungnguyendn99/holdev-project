@@ -5,7 +5,7 @@ import { TRADES_COLLECTION_NAME } from './schemas/constants';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { USER_COLLECTION_NAME, USER_SETTING_COLLECTION_NAME } from '../users/schemas/constants';
-import { groupTrades } from './utils/trades.util';
+import { getDateRangeByMode, groupTrades } from './utils/trades.util';
 import * as moment from 'moment';
 
 @Injectable()
@@ -22,6 +22,13 @@ export class TradingService {
         userId: userId,
         user: userId,
         reward: body.result / 4,
+        ...(body.entryTime && body.closeTime
+          ? (() => {
+              const diff = moment.duration(moment(body.closeTime).diff(moment(body.entryTime)));
+              const duration = `${Math.floor(diff.asHours())}h ${diff.minutes()}m`;
+              return { duration };
+            })()
+          : {}),
       });
       await newTrade.save();
       return { success: true };
@@ -33,22 +40,33 @@ export class TradingService {
 
   async listTrade(userId: string, body: any) {
     try {
-      let query: any = {
+      const { startDate, endDate } = getDateRangeByMode(body.mode, body.dateString);
+
+      const query = {
         userId,
         isDeleted: { $ne: true },
+        closeTime: { $gte: startDate, $lte: endDate },
       };
-      if (body.dateString) {
-        const startOfMonth = moment(body.dateString, 'YYYY-MM').startOf('month').toDate();
-        const endOfMonth = moment(body.dateString, 'YYYY-MM').endOf('month').toDate();
-        query = { ...query, closeTime: { $gte: startOfMonth, $lte: endOfMonth } };
-      }
       console.log('query', query);
 
       const listTrade = await this.tradeModel.find(query).sort({ closeTime: -1 }).exec();
-      if (body.mode) {
-        return groupTrades(listTrade, body.mode);
-      }
+      // if (body.mode) {
+      //   return groupTrades(listTrade, body.mode);
+      // }
       return listTrade;
+    } catch (error) {
+      console.log('error', error);
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async listGroupTrade(userId: string, body: any) {
+    try {
+      const listTrade = await this.listTrade(userId, body);
+      return groupTrades(listTrade, body.group);
+      // if (body.mode) {
+      // }
+      // return listTrade;
     } catch (error) {
       console.log('error', error);
       throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
@@ -99,7 +117,7 @@ export class TradingService {
       const trade = await this.tradeModel.findById(body.id);
 
       if (!trade) {
-        throw new HttpException(`Không tìm thấy thông tin todo.`, 404);
+        throw new HttpException(`Không tìm thấy thông tin trade.`, 404);
       }
       trade.set({
         ...(body?.closePrice !== undefined && { closePrice: body.closePrice }),
@@ -110,6 +128,13 @@ export class TradingService {
         ...(body?.result !== undefined && { result: body.result }),
         ...(body?.rating !== undefined && { rating: body.rating }),
         ...(body?.yourThought !== undefined && { yourThought: body.yourThought }),
+        ...(body.entryTime && body.closeTime
+          ? (() => {
+              const diff = moment.duration(moment(body.closeTime).diff(moment(body.entryTime)));
+              const duration = `${Math.floor(diff.asHours())}h ${diff.minutes()}m`;
+              return { duration };
+            })()
+          : {}),
       });
 
       await trade.save();

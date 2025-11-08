@@ -9,7 +9,6 @@ export const TradesSchema = new Schema(
   {
     userId: { type: String },
     user: { type: Schema.Types.ObjectId, ref: USER_COLLECTION_NAME },
-    userSetting: { type: Schema.Types.ObjectId, ref: USER_SETTING_COLLECTION_NAME },
 
     symbol: { type: String, required: true }, // Ví dụ: "BTC/USD"
     tradeSide: { type: String, enum: ['BUY', 'SELL'], required: true },
@@ -20,6 +19,7 @@ export const TradesSchema = new Schema(
 
     entryTime: { type: Date, required: true }, // Thời gian vào lệnh
     closeTime: { type: Date }, // Thời gian đóng lệnh
+    duration: { type: String }, // vd: 1h 49m
 
     takeProfit: { type: Number }, // Mục tiêu chốt lời
     stopLoss: { type: Number }, // Mức cắt lỗ
