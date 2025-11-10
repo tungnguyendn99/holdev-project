@@ -75,7 +75,7 @@ export function groupSessions(sessions: any[], group: GroupMode = 'day'): Record
 
     result[key] = {
       profit: `${profitSum}$`,
-      hands: `${handsSum} hands`,
+      hands: handsSum,
       winrate: `${winrate}bb/100`,
       dayProfit: profitSum > 0,
       dayLoss: profitSum < 0,

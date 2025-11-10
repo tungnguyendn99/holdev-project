@@ -10,9 +10,8 @@ export const UserSettingSchema = new Schema(
     user: { type: Schema.Types.ObjectId, ref: USER_COLLECTION_NAME },
     type: { type: String, enum: ['TRADING', 'POKER'], required: true },
     identity: { type: String, enum: ['REAL', 'DEMO'], required: true },
-    profit: { type: Number, default: 0 },
+    monthlyTarget: { type: Number, default: 0 },
     plan: { type: String },
-    target: { type: String },
     risk: {
       type: mongoose.Schema.Types.Mixed,
       validate: {
@@ -20,6 +19,8 @@ export const UserSettingSchema = new Schema(
         message: (props) => `${props.value} must be a string or a number`,
       },
     },
+    rule: { type: String },
+    note: { type: String },
   },
   {
     collection: USER_SETTING_COLLECTION_NAME,
