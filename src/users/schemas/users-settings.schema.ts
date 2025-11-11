@@ -10,7 +10,8 @@ export const UserSettingSchema = new Schema(
     user: { type: Schema.Types.ObjectId, ref: USER_COLLECTION_NAME },
     type: { type: String, enum: ['TRADING', 'POKER'], required: true },
     identity: { type: String, enum: ['REAL', 'DEMO'], required: true },
-    monthlyTarget: { type: Number, default: 0 },
+    monthTarget: { type: Number, default: 0 },
+    dayTarget: { type: Number, default: 0 },
     plan: { type: String },
     risk: {
       type: mongoose.Schema.Types.Mixed,

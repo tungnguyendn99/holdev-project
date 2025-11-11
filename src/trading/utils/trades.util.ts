@@ -6,7 +6,7 @@ export type GroupMode = 'day' | 'week' | 'month' | 'year';
 export interface GroupedTradeData {
   profit: string; // tổng result dạng '$'
   reward: string; // tổng reward dạng 'xR'
-  trades: string; // số lượng trades dạng 'x trades'
+  trades: number; // số lượng trades dạng 'x trades'
   winrate: string; // phần trăm thắng
   dayProfit: boolean; // có lời không
   dayLoss: boolean; // có lỗ không
@@ -76,9 +76,9 @@ export function groupTrades(trades: any[], group: GroupMode = 'day'): Record<str
     const winrate = total > 0 ? Math.round((winCount / total) * 100) : 0;
 
     result[key] = {
-      profit: `${profitSum}$`,
-      reward: `${rewardSum}R`,
-      trades: `${total} trade${total > 1 ? 's' : ''}`,
+      profit: profitSum,
+      reward: rewardSum,
+      trades: total,
       winrate: `${winrate}%`,
       dayProfit: profitSum > 0,
       dayLoss: profitSum < 0,

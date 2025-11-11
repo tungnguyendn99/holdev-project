@@ -30,6 +30,20 @@ export class UsersController {
     return this.usersService.createUserSetting(userId, body);
   }
 
+  @Post('get-setting')
+  @UseGuards(AuthGuard('user-jwt'))
+  async getUserSetting(@Req() req, @Body() body: any) {
+    const userId = req.user.userId;
+    return this.usersService.getUserSetting(userId, body);
+  }
+
+  @Post('update-setting')
+  @UseGuards(AuthGuard('user-jwt'))
+  async updateUserSetting(@Req() req, @Body() body: any) {
+    const userId = req.user.userId;
+    return this.usersService.updateUserSetting(userId, body);
+  }
+
   // @Get()
   // findAll() {
   //   return this.usersService.findAll();

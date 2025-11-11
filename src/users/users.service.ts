@@ -62,10 +62,42 @@ export class UsersService {
     try {
       const newUserSetting = new this.userSettingModel({
         ...body,
+        dayTarget: body.monthlyTarget ? body.monthTarget / 22 : undefined,
         userId: userId,
         user: userId,
       });
       await newUserSetting.save();
+      return { success: true };
+    } catch (error) {
+      console.log('error', error);
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async getUserSetting(userId: string, body: any): Promise<any> {
+    try {
+      const userSetting = await this.userSettingModel.findOne({ userId: userId, type: body.type }).exec();
+      if (!userSetting) {
+        throw new Error('User setting not found');
+      }
+      return userSetting;
+    } catch (error) {
+      console.log('error', error);
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async updateUserSetting(userId: string, body: any): Promise<any> {
+    try {
+      const updateUserSetting = await this.userSettingModel
+        .findOneAndUpdate(
+          { _id: body.id, userId, type: body.type },
+          {
+            ...body,
+            dayTarget: body.monthTarget ? body.monthTarget / 22 : undefined,
+          },
+        )
+        .exec();
       return { success: true };
     } catch (error) {
       console.log('error', error);
