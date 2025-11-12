@@ -12,7 +12,7 @@ export const TradesSchema = new Schema(
 
     symbol: { type: String, required: true }, // Ví dụ: "BTC/USD"
     tradeSide: { type: String, enum: ['BUY', 'SELL'], required: true },
-    volume: { type: Number, required: true }, // Khối lượng giao dịch
+    lots: { type: Number, required: true }, // Khối lượng giao dịch
 
     entryPrice: { type: Number, required: true }, // Giá vào lệnh
     closePrice: { type: Number }, // Giá đóng lệnh

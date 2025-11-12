@@ -42,4 +42,16 @@ export class ConfigMongoService implements MongooseOptionsFactory {
       retryDelay: 3000,
     };
   }
+
+  getRapidApiKey(): string {
+    return this.configService.get<string>('RAPID_API_KEY');
+  }
+
+  getEnglishWordsUrlApi(): string {
+    return this.configService.get<string>('ENGLISH_WORDS_API_URL');
+  }
+
+  getQuotesUrlApi(): string {
+    return this.configService.get<string>('QUOTES_API_URL');
+  }
 }

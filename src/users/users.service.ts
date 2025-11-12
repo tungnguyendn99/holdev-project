@@ -62,7 +62,7 @@ export class UsersService {
     try {
       const newUserSetting = new this.userSettingModel({
         ...body,
-        dayTarget: body.monthlyTarget ? body.monthTarget / 22 : undefined,
+        dayTarget: body.monthTarget ? body.monthTarget / 22 : undefined,
         userId: userId,
         user: userId,
       });

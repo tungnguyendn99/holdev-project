@@ -88,3 +88,26 @@ export function groupTrades(trades: any[], group: GroupMode = 'day'): Record<str
 
   return result;
 }
+
+export function normalizeNumberString(str: any) {
+  // Xử lý input rỗng hoặc null
+  if (!str) return null;
+
+  str = str.trim();
+  const parts = str.split(',');
+
+  let normalized = '';
+
+  if (parts.length === 1) {
+    normalized = str;
+  } else if (parts.length === 2) {
+    normalized = str.replace(/,/g, '');
+  } else {
+    const last = parts.pop();
+    const before = parts.join('');
+    normalized = `${before}.${last}`;
+  }
+
+  const num = parseFloat(normalized);
+  return isNaN(num) ? null : num;
+}

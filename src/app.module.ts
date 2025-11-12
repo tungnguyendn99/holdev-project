@@ -13,12 +13,15 @@ import { UsersModule } from './users/users.module';
 import { TodoModule } from './todo/todo.module';
 import { NotificationModule } from './notification/notification.module';
 import { PokerModule } from './poker/poker.module';
+import { EnglishModule } from './english/english.module';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
     HttpModule,
     MongoConfigModule,
     ScheduleModule.forRoot(),
+    TaskModule,
     ConfigModule.forRoot({
       envFilePath: ['config/production.env'],
       isGlobal: true,
@@ -35,6 +38,7 @@ import { PokerModule } from './poker/poker.module';
     TodoModule,
     NotificationModule,
     PokerModule,
+    EnglishModule,
   ],
   controllers: [AppController],
   providers: [AppService],

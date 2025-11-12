@@ -5,8 +5,9 @@ import { TRADES_COLLECTION_NAME } from './schemas/constants';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { USER_COLLECTION_NAME, USER_SETTING_COLLECTION_NAME } from '../users/schemas/constants';
-import { getDateRangeByMode, groupTrades } from './utils/trades.util';
+import { getDateRangeByMode, groupTrades, normalizeNumberString } from './utils/trades.util';
 import * as moment from 'moment';
+import * as XLSX from 'xlsx';
 
 @Injectable()
 export class TradingService {
@@ -141,6 +142,99 @@ export class TradingService {
       return { success: true };
     } catch (error) {
       console.log('error', error);
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async processExcelFile(userId: string, fileBuffer: Buffer) {
+    try {
+      // 1. Đọc file Excel từ Buffer
+      const workbook = XLSX.read(fileBuffer, { type: 'buffer' });
+
+      // 2. Chọn sheet đầu tiên
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+
+      // 3. Chuyển đổi dữ liệu sheet thành mảng JSON
+      const data: any = XLSX.utils.sheet_to_json(worksheet, {
+        // header: 1, // Tùy chọn: nếu hàng đầu tiên không phải tiêu đề
+        raw: false, // Giữ nguyên định dạng chuỗi
+      });
+
+      // 4. Định dạng lại dữ liệu trước khi lưu DB
+      const tradesToInsert = data
+        .map((row: any) => {
+          const isUsdc = row.symbol.endsWith('c');
+          console.log('isUsdc', isUsdc);
+
+          const symbol = isUsdc ? row.symbol.slice(0, -1) : row.symbol;
+          const lots = isUsdc ? +row.lots / 100 : +row.lots;
+
+          const result = isUsdc ? normalizeNumberString(row.profit_usc) / 100 : normalizeNumberString(row.profit_usd);
+          console.log('result', result);
+
+          let closedBy = '';
+          switch (row.close_reason) {
+            case 'user':
+              closedBy = 'MA';
+              break;
+            case 'sl':
+              closedBy = 'SL';
+              break;
+            case 'tp':
+              closedBy = 'TP';
+              break;
+            case 'so':
+              closedBy = 'SO';
+              break;
+            default:
+              closedBy = '';
+              break;
+          }
+          const openTimeUtc = row.opening_time_utc + 'Z';
+          const entryTime = new Date(openTimeUtc);
+          const closeTimeUtc = row.closing_time_utc + 'Z';
+          const closeTime = new Date(closeTimeUtc);
+          const diff = moment.duration(moment(closeTime).diff(moment(entryTime)));
+          return {
+            // Tùy chỉnh các trường, ví dụ:
+            patientCode: row['Mã Bệnh Nhân'] || row.patientCode,
+            fullName: row['Họ Tên'],
+            mobile: row['Số Điện Thoại'],
+            // ... đảm bảo các key khớp với Schema MongoDB của bạn
+
+            userId: userId,
+            user: userId,
+
+            symbol, // Ví dụ: "BTCUSD"
+            tradeSide: row.type.toUpperCase(),
+            lots, // Khối lượng giao dịch
+
+            entryPrice: normalizeNumberString(row.opening_price), // Giá vào lệnh
+            closePrice: normalizeNumberString(row.closing_price), // Giá đóng lệnh
+
+            entryTime, // Thời gian vào lệnh
+            closeTime, // Thời gian đóng lệnh
+            duration: `${Math.floor(diff.asHours())}h ${diff.minutes()}m`, // vd: 1h 49m
+
+            takeProfit: normalizeNumberString(row.take_profit) || null, // Mục tiêu chốt lời
+            stopLoss: normalizeNumberString(row.stop_loss) || null, // Mức cắt lỗ
+            closedBy, // Lý do đóng lệnh ['SL', 'TP', 'BE', 'MA', 'SO']
+
+            result: result?.toFixed(2), // Kết quả (lãi/lỗ)
+
+            reward: (result / 4)?.toFixed(2),
+          };
+        })
+        .sort((a, b) => new Date(a.entryTime).getTime() - new Date(b.entryTime).getTime());
+
+      // 5. Lưu dữ liệu vào MongoDB
+      // Sử dụng insertMany để chèn nhiều document một lần
+      const result = await this.tradeModel.insertMany(tradesToInsert);
+
+      return result;
+    } catch (error) {
+      console.log('error-excel', error);
       throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
     }
   }
