@@ -1,5 +1,5 @@
 # Dùng NodeJS nhẹ
-FROM node:18-alpine
+FROM docker.io/library/node:20-alpine
 
 # Tạo thư mục làm việc
 WORKDIR /app
