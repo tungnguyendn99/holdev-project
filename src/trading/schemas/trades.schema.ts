@@ -2,6 +2,7 @@ import * as mongoose from 'mongoose';
 import * as jsonMongo from '@meanie/mongoose-to-json';
 import { TRADES_COLLECTION_NAME } from './constants';
 import { USER_COLLECTION_NAME, USER_SETTING_COLLECTION_NAME } from '../../users/schemas/constants';
+import { model, models } from 'mongoose';
 
 const Schema = mongoose.Schema;
 
@@ -38,3 +39,5 @@ export const TradesSchema = new Schema(
     timestamps: true,
   },
 ).plugin(jsonMongo);
+
+export const TradesModel = models[TRADES_COLLECTION_NAME] || model(TRADES_COLLECTION_NAME, TradesSchema);
