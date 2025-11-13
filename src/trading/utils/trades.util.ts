@@ -30,19 +30,21 @@ export function getDateRangeByMode(mode: 'day' | 'month' | 'year', dateString?: 
   const format = modeConfig[mode] || 'YYYY-MM-DD';
   const baseDate = dateString ? moment.utc(dateString, format) : moment.utc();
 
-  const startDate = baseDate.clone().startOf(mode).subtract().subtract(7, 'hours').toDate();
+  const startDate = baseDate.clone().startOf(mode).subtract(7, 'hours').toDate();
   const endDate = baseDate.clone().endOf(mode).subtract(7, 'hours').toDate();
 
   return { startDate, endDate };
 }
 
 export function groupTrades(trades: any[], group: GroupMode = 'day'): Record<string | number, GroupedTradeData> {
+  console.log('groupTrades');
   const grouped: Record<string | number, any[]> = {};
-  console.log('trades', trades);
+  // console.log('trades', trades);
 
   // 1️⃣ Group trades theo mode
   for (const trade of trades) {
-    const date = moment(trade.closeTime);
+    const date = moment(trade.closeTime).utc().add(7, 'hours');
+    console.log('date', date);
 
     let key: string | number;
     switch (group) {

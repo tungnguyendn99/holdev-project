@@ -27,10 +27,10 @@ export function getDateRangeByMode(mode: 'day' | 'month' | 'year', dateString?: 
   };
 
   const format = modeConfig[mode] || 'YYYY-MM-DD';
-  const baseDate = dateString ? moment(dateString, format) : moment();
+  const baseDate = dateString ? moment.utc(dateString, format) : moment.utc();
 
-  const startDate = baseDate.clone().startOf(mode).toDate();
-  const endDate = baseDate.clone().endOf(mode).toDate();
+  const startDate = baseDate.clone().startOf(mode).subtract(7, 'hours').toDate();
+  const endDate = baseDate.clone().endOf(mode).subtract(7, 'hours').toDate();
 
   return { startDate, endDate };
 }
@@ -40,7 +40,7 @@ export function groupSessions(sessions: any[], group: GroupMode = 'day'): Record
 
   // 1️⃣ Group trades theo mode
   for (const session of sessions) {
-    const date = moment(session.startTime);
+    const date = moment(session.startTime).utc().add(7, 'hours');
 
     let key: string | number;
     switch (group) {
