@@ -67,8 +67,8 @@ export class EnglishService {
     try {
       const response = await this.httpService.axiosRef.request(options);
 
-      const newWord = new this.quoteModel({
-        ...response.data
+      const newWord = new this.englishWordModel({
+        ...response.data,
       });
       await newWord.save();
       return newWord;
@@ -88,11 +88,11 @@ export class EnglishService {
       return newWord;
     } catch (error) {
       console.log('error', error);
-      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);      
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
     }
   }
 
-  getWordDefinition(word: string) {
-    return this.englishWordModel.findOne({ word }).exec();
+  async getWordDefinition(word: string) {
+    return await this.englishWordModel.findOne({ word }).exec();
   }
 }

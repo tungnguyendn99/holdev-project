@@ -51,10 +51,16 @@ export class TradingService {
       console.log('query', query);
 
       const listTrade = await this.tradeModel.find(query).sort({ closeTime: -1 }).exec();
+      const result = listTrade.map((t) => {
+        return {
+          ...t.toObject(),
+          lots: Number(t.lots.toFixed(4)),
+        };
+      });
       // if (body.mode) {
       //   return groupTrades(listTrade, body.mode);
       // }
-      return listTrade;
+      return result;
     } catch (error) {
       console.log('error', error);
       throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);

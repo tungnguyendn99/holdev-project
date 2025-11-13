@@ -35,4 +35,14 @@ export class EnglishController {
   getQuoteHomePage() {
     return this.englishService.getQuoteHomePage();
   }
+
+  @Post('new-word')
+  addNewWord(@Body() body: any) {
+    return this.englishService.addNewWord(body.word);
+  }
+
+  @Get('word')
+  getWord(@Param('word') word: string) {
+    return this.englishService.getWordDefinition(word);
+  }
 }

@@ -6,6 +6,15 @@
 | `synonyms`   | Từ đồng nghĩa hoàn toàn hoặc gần giống                  | `automatic`, `reflexive`    |
 | `inCategory` | Lĩnh vực hoặc phạm vi chuyên ngành                      | `physiology`                |
 
+📘 Tổng kết ý nghĩa:
+Thuộc tính ----- Ý nghĩa
+definition ----- Định nghĩa chính của từ
+synonyms ----- Các từ đồng nghĩa
+typeOf ----- Từ bao quát hơn mà từ này thuộc về (supertype)
+hasTypes ----- Các loại con, ví dụ cụ thể hơn của từ này (subtypes)
+examples ----- Các câu ví dụ minh họa
+similarTo ----- Từ có nghĩa tương tự (nhưng không hoàn toàn đồng nghĩa)
+
 <!-- {
     "word": "reflex",
     "results": [

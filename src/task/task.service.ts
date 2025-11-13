@@ -16,7 +16,7 @@ export class TaskService {
 
   constructor(private readonly englishService: EnglishService) {}
 
-  @Cron(CronExpression.EVERY_DAY_AT_5AM)
+  @Cron(CronExpression.EVERY_DAY_AT_10PM)
   async sendNotifChiDinhToPatient() {
     return this.englishService.proxyGetQuotesEveryday();
   }
