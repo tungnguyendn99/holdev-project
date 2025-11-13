@@ -40,4 +40,4 @@ export const TradesSchema = new Schema(
   },
 ).plugin(jsonMongo);
 
-export const TradesModel = models[TRADES_COLLECTION_NAME] || model(TRADES_COLLECTION_NAME, TradesSchema);
+// export const TradesModel = models[TRADES_COLLECTION_NAME] || model(TRADES_COLLECTION_NAME, TradesSchema);
