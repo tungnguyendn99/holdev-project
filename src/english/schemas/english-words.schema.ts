@@ -33,6 +33,7 @@ export const EnglishWordsSchema = new Schema(
       adj: String,
     },
     frequency: Number,
+    translate: { type: String }
   },
   {
     collection: ENGLISH_WORDS_COLLECTION_NAME,

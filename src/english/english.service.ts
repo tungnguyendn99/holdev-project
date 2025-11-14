@@ -53,6 +53,25 @@ export class EnglishService {
       .exec();
   }
 
+  async proxyTranslateWord(word: string) {
+    const wordsApiUrl = this.urlConfigService.getTranslateWordsUrlApi();
+    const options = {
+      method: 'GET',
+      url: `${wordsApiUrl}?input_text=${word}&to_language=vi`,
+      headers: {
+        'x-rapidapi-host': 'google-translate-api14.p.rapidapi.com',
+        'x-rapidapi-key': this.urlConfigService.getRapidApiKey(),
+      },
+    };
+    try {
+      const { data } = await this.httpService.axiosRef.request(options);
+      return data.translated_text || '';
+    } catch (error) {
+      console.error('Error proxyTranslateWord:', error);
+      return ''
+    }
+  }
+
   async proxyGetEnglishWord(word: string) {
     const wordsApiUrl = this.urlConfigService.getEnglishWordsUrlApi();
     const options = {
@@ -66,9 +85,11 @@ export class EnglishService {
 
     try {
       const response = await this.httpService.axiosRef.request(options);
+      const translate = await this.proxyTranslateWord(word);
 
       const newWord = new this.englishWordModel({
         ...response.data,
+        translate
       });
       await newWord.save();
       return newWord;
@@ -94,5 +115,9 @@ export class EnglishService {
 
   async getWordDefinition(word: string) {
     return await this.englishWordModel.findOne({ word }).exec();
+  }
+
+  async getListWords() {
+    return await this.englishWordModel.find().sort({ createdAt: -1 }).exec();
   }
 }

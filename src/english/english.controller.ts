@@ -45,4 +45,9 @@ export class EnglishController {
   getWord(@Param('word') word: string) {
     return this.englishService.getWordDefinition(word);
   }
+
+  @Get('list-words')
+  getListWords() {
+    return this.englishService.getListWords();
+  }
 }

@@ -50,6 +50,10 @@ export class ConfigMongoService implements MongooseOptionsFactory {
   getEnglishWordsUrlApi(): string {
     return this.configService.get<string>('ENGLISH_WORDS_API_URL');
   }
+  
+  getTranslateWordsUrlApi(): string {
+    return this.configService.get<string>('TRANSLATE_API_URL');
+  }
 
   getQuotesUrlApi(): string {
     return this.configService.get<string>('QUOTES_API_URL');
