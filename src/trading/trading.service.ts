@@ -52,9 +52,11 @@ export class TradingService {
 
       const listTrade = await this.tradeModel.find(query).sort({ closeTime: -1 }).exec();
       const result = listTrade.map((t) => {
+        const item = t.toObject();
         return {
-          ...t.toObject(),
+          ...item,
           lots: Number(t.lots.toFixed(4)),
+          id: item._id,
         };
       });
       // if (body.mode) {
