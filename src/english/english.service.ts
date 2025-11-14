@@ -68,7 +68,7 @@ export class EnglishService {
       return data.translated_text || '';
     } catch (error) {
       console.error('Error proxyTranslateWord:', error);
-      return ''
+      return '';
     }
   }
 
@@ -89,13 +89,16 @@ export class EnglishService {
 
       const newWord = new this.englishWordModel({
         ...response.data,
-        translate
+        translate,
       });
       await newWord.save();
       return newWord;
     } catch (error) {
       console.error('Error fetching word definition:', error);
-      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(error?.response?.data?.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -109,6 +112,9 @@ export class EnglishService {
       return newWord;
     } catch (error) {
       console.log('error', error);
+      if (error instanceof HttpException) {
+        throw error;
+      }
       throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
     }
   }
