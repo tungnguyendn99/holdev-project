@@ -15,6 +15,7 @@ import { NotificationModule } from './notification/notification.module';
 import { PokerModule } from './poker/poker.module';
 import { EnglishModule } from './english/english.module';
 import { TaskModule } from './task/task.module';
+import { ImagesModule } from './images/images.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { TaskModule } from './task/task.module';
     NotificationModule,
     PokerModule,
     EnglishModule,
+    ImagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

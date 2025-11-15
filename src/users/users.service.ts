@@ -26,20 +26,33 @@ export class UsersService {
     }
   }
 
-  async updateUser(body: any): Promise<any> {
+  async updateUser(userId: string, body: any) {
     try {
-      const updateUser = await this.userModel
-        .findByIdAndUpdate(
-          { _id: body.id },
-          {
-            features: body.features,
-          },
-        )
-        .exec();
-      return { success: true };
+      const user = await this.userModel.findById(userId);
+
+      if (!user) {
+        throw new HttpException('Session not found.', HttpStatus.NOT_FOUND);
+      }
+
+      const updates: Record<string, any> = {};
+
+      // 🧩 Cập nhật các field cơ bản
+      const allowedFields = ['username', 'avatar'];
+
+      for (const field of allowedFields) {
+        if (body[field] !== undefined) {
+          updates[field] = body[field];
+        }
+      }
+
+      // ✅ Gán tất cả updates 1 lần
+      user.set(updates);
+      await user.save();
+
+      return await user.save();
     } catch (error) {
-      console.log('error', error);
-      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+      console.error('updateTrade error:', error);
+      throw new HttpException(error?.message || 'Failed to update session', HttpStatus.BAD_REQUEST);
     }
   }
 

@@ -31,6 +31,12 @@ export class EnglishController {
   // remove(@Param('id') id: string) {
   //   return this.englishService.remove(+id);
   // }
+
+  @Get('proxy-get-quote')
+  proxyGetQuotesEveryday() {
+    return this.englishService.proxyGetQuotesEveryday();
+  }
+
   @Get('quote')
   getQuoteHomePage() {
     return this.englishService.getQuoteHomePage();

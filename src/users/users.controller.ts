@@ -14,8 +14,10 @@ export class UsersController {
   }
 
   @Post('update')
-  async updateUser(@Body() body: any) {
-    return this.usersService.updateUser(body);
+  @UseGuards(AuthGuard('user-jwt'))
+  async updateUser(@Req() req, @Body() body: any) {
+    const userId = req.user.userId;
+    return this.usersService.updateUser(userId, body);
   }
 
   @Post('login')
