@@ -144,6 +144,7 @@ export class TradingService {
               return { duration };
             })()
           : {}),
+        ...(body?.images !== undefined && { images: body.images }),
       });
 
       await trade.save();

@@ -33,6 +33,8 @@ export const TradesSchema = new Schema(
     reward: { type: Number },
 
     isDeleted: { type: Boolean, default: false },
+
+    images: [{ type: String }],
   },
   {
     collection: TRADES_COLLECTION_NAME,

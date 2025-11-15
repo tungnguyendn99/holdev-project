@@ -13,7 +13,7 @@ import {
   UseGuards,
   UploadedFiles,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ImagesService } from './images.service';
 import { diskStorage, memoryStorage } from 'multer';
 import { AuthGuard } from '@nestjs/passport';
@@ -58,18 +58,18 @@ export class ImagesController {
 
   // multiple files
   @Post('upload-multiple')
+  @UseGuards(AuthGuard('user-jwt'))
   @UseInterceptors(
-    FileInterceptor('files', {
+    FilesInterceptor('files', 5, {
       storage: memoryStorage(), // for multiple, use FilesInterceptor instead in real code
     }),
   )
-  async uploadMultiple(@UploadedFiles() files: Express.Multer.File[]) {
+  async uploadMultiple(@Req() req, @UploadedFiles() files: Express.Multer.File[]) {
     if (!files || files.length === 0) {
       throw new BadRequestException('Files are required');
     }
-
-    const uploaded = await this.imagesService.uploadMultiple(files);
-    return { items: uploaded };
+    const userId = req.user.userId;
+    return this.imagesService.uploadMultiple(userId, files);
   }
 
   @Get()

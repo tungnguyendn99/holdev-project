@@ -50,17 +50,32 @@ export class ImagesService {
   }
 
   // images.service.ts
-  async uploadMultiple(files: Express.Multer.File[]) {
-    const results = [];
+  async uploadMultiple(userId: string, files: Express.Multer.File[]) {
+    try {
+      const results = [];
 
-    for (const file of files) {
-      const uploaded = await this.cloudinary.uploadBuffer(file.buffer, {
-        folder: 'user_uploads',
-        resource_type: 'image',
-      });
-      results.push(uploaded);
+      for (const file of files) {
+        const res = await this.cloudinary.uploadBuffer(file.buffer, {
+          folder: 'user_uploads',
+          resource_type: 'image',
+        });
+        const saved = await this.saveImageRecord({
+          publicId: res.public_id,
+          url: res.secure_url,
+          width: res.width,
+          height: res.height,
+          format: res.format,
+          size: res.bytes,
+          folder: res.folder,
+          userId: userId,
+          user: userId,
+        });
+        results.push(saved.url);
+      }
+
+      return results;
+    } catch (error) {
+      console.log('error', error);
     }
-
-    return results;
   }
 }
