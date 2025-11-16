@@ -56,16 +56,22 @@ export class EnglishService {
   async proxyTranslateWord(word: string) {
     const wordsApiUrl = this.urlConfigService.getTranslateWordsUrlApi();
     const options = {
-      method: 'GET',
-      url: `${wordsApiUrl}?input_text=${word}&to_language=vi`,
+      method: 'POST',
+      url: wordsApiUrl,
       headers: {
-        'x-rapidapi-host': 'google-translate-api14.p.rapidapi.com',
+        'Content-Type': 'application/json',
+        'x-rapidapi-host': 'deep-translate1.p.rapidapi.com',
         'x-rapidapi-key': this.urlConfigService.getRapidApiKey(),
+      },
+      data: {
+        q: word,
+        source: 'en',
+        target: 'vi',
       },
     };
     try {
       const { data } = await this.httpService.axiosRef.request(options);
-      return data.translated_text || '';
+      return data?.data?.translations?.translatedText[0] || '';
     } catch (error) {
       console.error('Error proxyTranslateWord:', error);
       return '';

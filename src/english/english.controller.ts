@@ -37,6 +37,11 @@ export class EnglishController {
     return this.englishService.proxyGetQuotesEveryday();
   }
 
+  @Post('translate')
+  proxyTranslateWord(@Body() body: any) {
+    return this.englishService.proxyTranslateWord(body.word);
+  }
+
   @Get('quote')
   getQuoteHomePage() {
     return this.englishService.getQuoteHomePage();
