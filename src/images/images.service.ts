@@ -16,7 +16,7 @@ export class ImagesService {
     return doc.save();
   }
 
-  async uploadAndSave(userId: string, buffer: Buffer, options: any = {}) {
+  async uploadAndSave(userId: string, buffer: Buffer, options: any = {}, type: string) {
     const res = await this.cloudinary.uploadBuffer(buffer, options);
     // res contains public_id, secure_url, width, height, format, bytes, folder...
     const saved = await this.saveImageRecord({
@@ -29,6 +29,7 @@ export class ImagesService {
       folder: res.folder,
       userId: userId,
       user: userId,
+      type,
     });
     return { cloudinary: res, db: saved };
   }
@@ -50,13 +51,17 @@ export class ImagesService {
   }
 
   // images.service.ts
-  async uploadMultiple(userId: string, files: Express.Multer.File[]) {
+  async uploadMultiple(userId: string, files: Express.Multer.File[], type: string) {
     try {
       const results = [];
+      let folder = process.env.CLOUDINARY_FOLDER || 'user_uploads';
+      if (userId === '690a0c764e4ed3dcf5eb437a') {
+        folder = process.env.CLOUDINARY_FOLDER_TEST;
+      }
 
       for (const file of files) {
         const res = await this.cloudinary.uploadBuffer(file.buffer, {
-          folder: 'user_uploads',
+          folder,
           resource_type: 'image',
         });
         const saved = await this.saveImageRecord({
@@ -69,6 +74,7 @@ export class ImagesService {
           folder: res.folder,
           userId: userId,
           user: userId,
+          type,
         });
         results.push(saved.url);
       }

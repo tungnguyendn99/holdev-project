@@ -17,6 +17,7 @@ export const ImageSchema = new Schema(
     altText: { type: String },
     userId: { type: String },
     user: { type: Schema.Types.ObjectId, ref: USER_COLLECTION_NAME },
+    type: { type: String }, //theo features
   },
   {
     collection: IMAGE_COLLECTION_NAME,

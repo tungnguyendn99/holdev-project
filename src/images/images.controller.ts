@@ -39,9 +39,13 @@ export class ImagesController {
     }),
   )
   async upload(@UploadedFile() file: Express.Multer.File, @Req() req, @Body() body: any) {
+    const userId = req.user.userId;
     if (!file) throw new BadRequestException('File is required');
     // optional folder or transformations
-    const folder = process.env.CLOUDINARY_FOLDER || 'app_uploads';
+    let folder = process.env.CLOUDINARY_FOLDER || 'user_uploads';
+    if (userId === '690a0c764e4ed3dcf5eb437a') {
+      folder = process.env.CLOUDINARY_FOLDER_TEST;
+    }
     console.log('folder', folder);
 
     const options = {
@@ -51,8 +55,8 @@ export class ImagesController {
       // public_id: 'optional_name', // or let cloudinary manage
       transformation: body.transformation || undefined,
     };
-    const userId = req.user.userId;
-    const result = await this.imagesService.uploadAndSave(userId, file.buffer, options);
+    const type = req.body.type || null;
+    const result = await this.imagesService.uploadAndSave(userId, file.buffer, options, type);
     return { isOk: true, result };
   }
 
@@ -69,7 +73,8 @@ export class ImagesController {
       throw new BadRequestException('Files are required');
     }
     const userId = req.user.userId;
-    return this.imagesService.uploadMultiple(userId, files);
+    const type = req.body.type || null;
+    return this.imagesService.uploadMultiple(userId, files, type);
   }
 
   @Get()
