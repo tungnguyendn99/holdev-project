@@ -121,6 +121,7 @@ export class PokerService {
         'result',
         'rating',
         'yourThought',
+        'images'
       ];
 
       for (const field of allowedFields) {

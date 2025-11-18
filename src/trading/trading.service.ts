@@ -206,12 +206,6 @@ export class TradingService {
           const closeTime = new Date(closeTimeUtc);
           const diff = moment.duration(moment(closeTime).diff(moment(entryTime)));
           return {
-            // Tùy chỉnh các trường, ví dụ:
-            patientCode: row['Mã Bệnh Nhân'] || row.patientCode,
-            fullName: row['Họ Tên'],
-            mobile: row['Số Điện Thoại'],
-            // ... đảm bảo các key khớp với Schema MongoDB của bạn
-
             userId: userId,
             user: userId,
 

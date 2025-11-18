@@ -79,9 +79,9 @@ export class ImagesController {
 
   @Get()
   @UseGuards(AuthGuard('user-jwt'))
-  async list(@Req() req) {
+  async list(@Req() req, @Query('type') type: string) {
     const userId = req.user.userId;
-    return this.imagesService.findByOwner(userId);
+    return this.imagesService.findByOwner(userId, type);
   }
 
   @Delete()

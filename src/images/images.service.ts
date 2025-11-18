@@ -46,8 +46,12 @@ export class ImagesService {
   }
 
   // extra helpers: find, paginate...
-  async findByOwner(userId: string) {
-    return this.imageModel.find({ userId }).sort({ createdAt: -1 }).exec();
+  async findByOwner(userId: string, type: string) {
+    const query = {
+      userId,
+      ...(type !== undefined && { type }),
+    }
+    return this.imageModel.find(query).sort({ createdAt: -1 }).exec();
   }
 
   // images.service.ts
