@@ -54,9 +54,9 @@ export class PokerService {
       };
       console.log('query', query);
 
-      const listTrade = await this.pokerSessionModel.find(query).sort({ startTime: -1 }).exec();
+      const listSession = await this.pokerSessionModel.find(query).sort({ startTime: -1 }).exec();
 
-      return listTrade;
+      return listSession;
     } catch (error) {
       console.log('error', error);
       throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
@@ -65,10 +65,10 @@ export class PokerService {
 
   async listGroupSession(userId: string, body: any) {
     try {
-      const listTrade = await this.listSession(userId, body);
-      console.log('listTrade', listTrade);
+      const listSession = await this.listSession(userId, body);
+      console.log('listSession', listSession);
 
-      return groupSessions(listTrade, body.group);
+      return groupSessions(listSession, body.group);
     } catch (error) {
       console.log('error', error);
       throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
@@ -121,7 +121,7 @@ export class PokerService {
         'result',
         'rating',
         'yourThought',
-        'images'
+        'images',
       ];
 
       for (const field of allowedFields) {

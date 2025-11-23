@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import 'moment/locale/vi'; // tuỳ chọn: để hiển thị tuần/tháng theo locale Việt Nam
 
-export type GroupMode = 'day' | 'week' | 'month';
+export type GroupMode = 'day' | 'week' | 'month' | 'year';
 
 export interface GroupedSessionData {
   profit: string; // tổng result dạng '$'
@@ -44,6 +44,9 @@ export function groupSessions(sessions: any[], group: GroupMode = 'day'): Record
 
     let key: string | number;
     switch (group) {
+      case 'year':
+        key = date.format('YYYY'); // ví dụ: 2025
+        break;
       case 'month':
         key = date.format('YYYY-MM'); // ví dụ: 2025-11
         break;
@@ -74,7 +77,7 @@ export function groupSessions(sessions: any[], group: GroupMode = 'day'): Record
     const winrate = calcWinrate(sessions);
 
     result[key] = {
-      profit: `${profitSum}$`,
+      profit: profitSum,
       hands: handsSum,
       winrate: `${winrate}bb/100`,
       dayProfit: profitSum > 0,

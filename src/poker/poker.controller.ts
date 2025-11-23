@@ -15,7 +15,7 @@ export class PokerController {
     return this.pokerService.addSession(userId, body);
   }
 
-  @Post('update')
+  @Post('session/update')
   @UseGuards(AuthGuard('user-jwt'))
   updateSession(@Req() req, @Body() body: any) {
     const userId = req.user.userId;
