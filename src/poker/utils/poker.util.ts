@@ -74,7 +74,7 @@ export function groupSessions(sessions: any[], group: GroupMode = 'day'): Record
 
     const total = group.length;
     // const winrate = total > 0 ? Math.round((winCount / total) * 100) : 0;
-    const winrate = calcWinrate(sessions);
+    const winrate = calcWinrate(group);
 
     result[key] = {
       profit: profitSum,
