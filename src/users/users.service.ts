@@ -89,11 +89,15 @@ export class UsersService {
 
   async getUserSetting(userId: string, body: any): Promise<any> {
     try {
-      const userSetting = await this.userSettingModel.findOne({ userId: userId, type: body.type }).exec();
-      if (!userSetting) {
-        throw new Error('User setting not found');
+      if (body?.type) {
+        const userSetting = await this.userSettingModel.findOne({ userId: userId, type: body.type }).exec();
+        if (!userSetting) {
+          throw new Error('User setting not found');
+        }
+        return userSetting;
+      } else {
+        return this.userSettingModel.find({ userId: userId }).exec();
       }
-      return userSetting;
     } catch (error) {
       console.log('error', error);
       throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
