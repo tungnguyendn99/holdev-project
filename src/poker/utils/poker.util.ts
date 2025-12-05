@@ -106,8 +106,11 @@ export function calculatePokerInfo(blind: string, totalBefore: number, totalAfte
   let resultBB = 0;
   let hands;
   let winrate;
-  if (totalAfter && result) {
-    hands = totalAfter - totalBefore;
+  hands = totalAfter - totalBefore;
+  if (result === 0) {
+    return { hands, resultBB: 0, winrate: 0 };
+  }
+  if (totalAfter && result !== undefined) {
     resultBB = result / parseFloat(blind.split('/').pop() || '0');
     winrate = Math.round((resultBB / hands) * 100);
   }
