@@ -67,7 +67,7 @@ export function groupSessions(sessions: any[], group: GroupMode = 'day'): Record
   const result: Record<string | number, GroupedSessionData> = {};
 
   for (const [key, group] of Object.entries(grouped)) {
-    const profitSum = group.reduce((sum, t) => sum + (t.result || 0), 0);
+    const profitSum = group.reduce((sum, t) => sum + (t.result || 0), 0).toFixed(1);
     const handsSum = group.reduce((sum, t) => sum + (t.hands || 0), 0);
     // const rewardSum = group.reduce((sum, t) => sum + (t.reward || 0), 0).toFixed(2);
     // const winCount = group.filter((t) => t.result > 0).length;
